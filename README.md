@@ -1,2 +1,2 @@
-# B3Zemi2022_SplineCurveInterpolation
-B3ゼミ2022用のスプライン曲線補間を行うプログラムです.
+# B3Zemi2023_SplineCurveInterpolation
+B3ゼミ2023用のスプライン曲線補間を行うプログラムです.
