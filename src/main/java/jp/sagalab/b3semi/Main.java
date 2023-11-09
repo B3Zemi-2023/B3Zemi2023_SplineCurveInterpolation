@@ -164,6 +164,21 @@ public class Main extends JFrame {
       drawLine(evaluateList.get(i-1), evaluateList.get(i), Color.RED);
     }
 
+    //制御点の表示
+    Point[] cp = splineCurve.controlPoints();
+    for(int i=0; i<cp.length; i++){
+      drawPoint(cp[i].x(), cp[i].y(), 3, Color.BLUE);
+    }
+    for(int i=0; i<cp.length-1; i++){
+      drawLine(cp[i], cp[i+1], Color.BLUE);
+    }
+
+    //点列の出力
+    System.out.println("points: ");
+    for(int i=0; i<points.length; i++){
+      System.out.println(points[i]);
+    }
+
   }
 
   /**
