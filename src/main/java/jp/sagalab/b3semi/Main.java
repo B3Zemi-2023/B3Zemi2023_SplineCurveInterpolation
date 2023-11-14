@@ -13,6 +13,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -119,6 +120,7 @@ public class Main extends JFrame {
     // リストを配列に変換する.
     Point[] points = shiftedPoints.toArray(new Point[0]);
 
+    System.out.println(Arrays.toString(points));
     // 次数
     int degree = 3;
 
@@ -130,7 +132,6 @@ public class Main extends JFrame {
     SplineCurve splineCurve = SplineCurveInterpolator.interpolate(points, degree, knotInterval);
     // ---------- ↑knotを指定しない場合↑ (節点間隔に合わせて節点列を自動で生成) ----------
 
-
 //    // ++++++++++ ↓knotを指定する場合↓ ++++++++++
 //    // 時刻パラメータを正規化しておくと節点を自分で定義しやすい.
 //    Range timeRange = Range.create(0.0, 1.0);
@@ -138,6 +139,8 @@ public class Main extends JFrame {
 //    List<Point> normalizedPoints = normalizePoints(timeRange);
 //    // リストを配列に変換する.
 //    Point[] points = normalizedPoints.toArray(new Point[0]);
+//
+//    System.out.println(Arrays.toString(points));
 //
 //    // 次数
 //    int degree = 3;
@@ -147,7 +150,7 @@ public class Main extends JFrame {
 //    // スプライン補間を行う
 //    //SplineCurveInterpolator.interpolateの引数は(点列(Point[]型), 次数(int型), 節点列(double[]型))
 //    SplineCurve splineCurve = SplineCurveInterpolator.interpolate(points, degree, knot);
-//    // ++++++++++ ↑knotを指定する場合↑ ++++++++++
+    // ++++++++++ ↑knotを指定する場合↑ ++++++++++
 
 
     // スプライン曲線の評価点を求める↓
@@ -164,6 +167,13 @@ public class Main extends JFrame {
       drawLine(evaluateList.get(i-1), evaluateList.get(i), Color.RED);
     }
 
+    Point[] newcp = splineCurve.controlPoints();
+    for (int i = 0; i < newcp.length; i++) {
+      drawPoint(newcp[i].x(), newcp[i].y(), 3, Color.BLUE);
+    }
+    for (int i = 1; i < newcp.length; i++) {
+      drawLine(newcp[i-1], newcp[i], Color.BLUE);
+    }
   }
 
   /**
