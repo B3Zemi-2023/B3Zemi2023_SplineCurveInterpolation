@@ -128,6 +128,17 @@ public class Main extends JFrame {
     // スプライン補間を行う
     // SplineCurveInterpolator.interpolateの引数は(点列(Point[]型), 次数(int型), 節点間隔(double型))にする.
     SplineCurve splineCurve = SplineCurveInterpolator.interpolate(points, degree, knotInterval);
+    Point[] seigyoten = splineCurve.controlPoints();
+    for (int i = 0; i < seigyoten.length-1; i++){
+      drawPoint(seigyoten[i].x(), seigyoten[i].y(), 1.0, Color.BLUE);
+      drawLine(seigyoten[i], seigyoten[i+1], Color.BLUE);
+    }
+
+
+
+
+
+
     // ---------- ↑knotを指定しない場合↑ (節点間隔に合わせて節点列を自動で生成) ----------
 
 
