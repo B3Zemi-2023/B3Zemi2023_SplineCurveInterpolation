@@ -46,7 +46,7 @@ public class Main extends JFrame {
     // ボタンを押したときの処理
     loadPoints.addActionListener(e -> {
       // 読み込みたい点列のCSVファイルのパスをfilePathに入れる.
-      String filePath = ".\\Points\\samplePoints.csv";
+      String filePath = ".\\Points\\points_1699330245116.csv";
       File pointsFile = new File(filePath);
       // readPointsメソッドを用いてPointのリストに変換
       List<Point> points = ReadCSV.readPoints(pointsFile);
@@ -61,6 +61,7 @@ public class Main extends JFrame {
       // スプライン曲線を描画
       drawSplineCurve();
     });
+
 
     add(m_canvas, BorderLayout.CENTER);
     JPanel buttonPanel = new JPanel();
@@ -113,41 +114,48 @@ public class Main extends JFrame {
    */
   public void drawSplineCurve() {
 
-    // ---------- ↓knotを指定しない場合↓ (節点間隔に合わせて節点列を自動で生成) ----------
-    // 分かりやすいように時刻パラメータを0から始まるようにシフトしておく.
-    List<Point> shiftedPoints = shiftPointsTimeZero();
+//    // ---------- ↓knotを指定しない場合↓ (節点間隔に合わせて節点列を自動で生成) ----------
+//    // 分かりやすいように時刻パラメータを0から始まるようにシフトしておく.
+//    List<Point> shiftedPoints = shiftPointsTimeZero();
+//    // リストを配列に変換する.
+//    Point[] points = shiftedPoints.toArray(new Point[0]);
+//    for(int i = 0; i< shiftedPoints.size();i++) {
+//      System.out.println(shiftedPoints.get(i));
+//    }
+//    // 次数
+//    int degree = 3;
+//
+//    // 節点間隔
+//    double knotInterval = 0.1;
+//
+//    // スプライン補間を行う
+//    // SplineCurveInterpolator.interpolateの引数は(点列(Point[]型), 次数(int型), 節点間隔(double型))にする.
+//    SplineCurve splineCurve = SplineCurveInterpolator.interpolate(points, degree, knotInterval);
+    // ---------- ↑knotを指定しない場合↑ (節点間隔に合わせて節点列を自動で生成) ----------
+
+
+
+
+
+    // ++++++++++ ↓knotを指定する場合↓ ++++++++++
+    // 時刻パラメータを正規化しておくと節点を自分で定義しやすい.
+    Range timeRange = Range.create(0.0, 1.0);
+    // 点列の時系列を正規化する.
+    List<Point> normalizedPoints = normalizePoints(timeRange);
     // リストを配列に変換する.
-    Point[] points = shiftedPoints.toArray(new Point[0]);
+    Point[] points = normalizedPoints.toArray(new Point[0]);
 
     // 次数
     int degree = 3;
 
-    // 節点間隔
-    double knotInterval = 0.1;
-
+    // 節点を定義する.
+    double[] knot = new double[]{-0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4};
     // スプライン補間を行う
-    // SplineCurveInterpolator.interpolateの引数は(点列(Point[]型), 次数(int型), 節点間隔(double型))にする.
-    SplineCurve splineCurve = SplineCurveInterpolator.interpolate(points, degree, knotInterval);
-    // ---------- ↑knotを指定しない場合↑ (節点間隔に合わせて節点列を自動で生成) ----------
+    //SplineCurveInterpolator.interpolateの引数は(点列(Point[]型), 次数(int型), 節点列(double[]型))
+    SplineCurve splineCurve = SplineCurveInterpolator.interpolate(points, degree, knot);
 
 
-//    // ++++++++++ ↓knotを指定する場合↓ ++++++++++
-//    // 時刻パラメータを正規化しておくと節点を自分で定義しやすい.
-//    Range timeRange = Range.create(0.0, 1.0);
-//    // 点列の時系列を正規化する.
-//    List<Point> normalizedPoints = normalizePoints(timeRange);
-//    // リストを配列に変換する.
-//    Point[] points = normalizedPoints.toArray(new Point[0]);
-//
-//    // 次数
-//    int degree = 3;
-//
-//    // 節点を定義する.
-//    double[] knot = new double[]{-0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4};
-//    // スプライン補間を行う
-//    //SplineCurveInterpolator.interpolateの引数は(点列(Point[]型), 次数(int型), 節点列(double[]型))
-//    SplineCurve splineCurve = SplineCurveInterpolator.interpolate(points, degree, knot);
-//    // ++++++++++ ↑knotを指定する場合↑ ++++++++++
+    // ++++++++++ ↑knotを指定する場合↑ ++++++++++
 
 
     // スプライン曲線の評価点を求める↓
@@ -162,6 +170,11 @@ public class Main extends JFrame {
     // SplineCurveの描画
     for (int i = 1; i < evaluateList.size(); i++) {
       drawLine(evaluateList.get(i-1), evaluateList.get(i), Color.RED);
+    }
+    Point[] p0 = splineCurve.controlPoints();
+    for(int i=0; i< p0.length-1;i++) {
+      drawPoint(p0[i].x(), p0[i].y(), 1.5, Color.blue);
+      drawLine(p0[i], p0[i + 1], Color.orange);
     }
 
   }
