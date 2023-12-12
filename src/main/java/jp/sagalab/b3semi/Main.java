@@ -145,6 +145,7 @@ public class Main extends JFrame {
     // リストを配列に変換する.
     Point[] points = normalizedPoints.toArray(new Point[0]);
 
+
     // 次数
     int degree = 3;
 
